@@ -1,5 +1,4 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Token, TokenAccount, Transfer};
 use std::collections::HashMap;
 
 declare_id!("11111111111111111111111111111112");
@@ -20,29 +19,29 @@ pub mod solana_tornado_cash {
         tornado.next_index = 0;
         tornado.authority = ctx.accounts.authority.key();
         
-        tornado.roots[0] = get_zero_hash(merkle_tree_height as usize);
+        let zero_hash = get_zero_hash(merkle_tree_height as usize);
+        tornado.roots[0..32].copy_from_slice(&zero_hash);
         
         Ok(())
     }
 
     pub fn deposit(ctx: Context<Deposit>, commitment: [u8; 32]) -> Result<()> {
-        let tornado = &mut ctx.accounts.tornado;
+        require!(!ctx.accounts.tornado.commitments.contains_key(&commitment), TornadoError::CommitmentExists);
         
-        require!(!tornado.commitments.contains_key(&commitment), TornadoError::CommitmentExists);
-        
-        let transfer_instruction = anchor_lang::system_program::Transfer {
-            from: ctx.accounts.depositor.to_account_info(),
-            to: ctx.accounts.tornado.to_account_info(),
-        };
+        let denomination = ctx.accounts.tornado.denomination;
         
         anchor_lang::system_program::transfer(
             CpiContext::new(
                 ctx.accounts.system_program.to_account_info(),
-                transfer_instruction,
+                anchor_lang::system_program::Transfer {
+                    from: ctx.accounts.depositor.to_account_info(),
+                    to: ctx.accounts.tornado.to_account_info(),
+                },
             ),
-            tornado.denomination,
+            denomination,
         )?;
 
+        let tornado = &mut ctx.accounts.tornado;
         let inserted_index = insert_commitment(tornado, commitment)?;
         tornado.commitments.insert(commitment, true);
 
@@ -218,9 +217,11 @@ fn insert_commitment(tornado: &mut TornadoState, commitment: [u8; 32]) -> Result
     for i in 0..tornado.merkle_tree_height {
         if current_index % 2 == 0 {
             tornado.filled_subtrees.insert(i as u32, current_level_hash);
-            current_level_hash = hash_left_right(&current_level_hash, &get_zero_hash(i as usize));
+            let zero_hash = get_zero_hash(i as usize);
+            current_level_hash = hash_left_right(&current_level_hash, &zero_hash);
         } else {
-            let left = tornado.filled_subtrees.get(&(i as u32)).unwrap_or(&get_zero_hash(i as usize));
+            let zero_hash = get_zero_hash(i as usize);
+            let left = tornado.filled_subtrees.get(&(i as u32)).unwrap_or(&zero_hash);
             current_level_hash = hash_left_right(left, &current_level_hash);
         }
         current_index /= 2;
