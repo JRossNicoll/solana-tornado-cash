@@ -1,0 +1,23 @@
+[package]
+name = "solana-tornado-cash"
+version = "0.1.0"
+description = "Privacy solution for Solana based on TornadoCash"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "solana_tornado_cash"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.29.0"
+anchor-spl = "0.29.0"
+solana-program = "~1.16.0"
+spl-token = "4.0.0"
+bytemuck = "1.4.0"

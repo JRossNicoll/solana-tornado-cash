@@ -1,0 +1,54 @@
+{
+  "name": "solana-tornado-cash",
+  "version": "1.0.0",
+  "description": "Privacy solution for Solana based on TornadoCash",
+  "main": "index.js",
+  "scripts": {
+    "build:circuit:compile": "npx circom circuits/withdraw.circom -o build/circuits/withdraw.json",
+    "build:circuit:setup": "npx snarkjs setup --protocol groth -c build/circuits/withdraw.json --pk build/circuits/withdraw_proving_key.json --vk build/circuits/withdraw_verification_key.json",
+    "build:circuit:bin": "node node_modules/websnark/tools/buildpkey.js -i build/circuits/withdraw_proving_key.json -o build/circuits/withdraw_proving_key.bin",
+    "build:circuit": "mkdir -p build/circuits && npm run build:circuit:compile && npm run build:circuit:setup && npm run build:circuit:bin",
+    "build:program": "anchor build",
+    "build": "npm run build:circuit && npm run build:program",
+    "test": "anchor test",
+    "deploy:local": "anchor deploy",
+    "dev": "cd frontend && npm run dev",
+    "lint": "eslint --ext .js,.ts --ignore-path .gitignore .",
+    "prettier:check": "prettier --check . --config .prettierrc",
+    "prettier:fix": "prettier --write . --config .prettierrc"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
+    "@solana/web3.js": "^1.87.6",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/wallet-adapter-react": "^0.15.35",
+    "@solana/wallet-adapter-react-ui": "^0.9.35",
+    "@solana/wallet-adapter-wallets": "^0.19.32",
+    "circom": "^0.0.35",
+    "circomlib": "git+https://github.com/tornadocash/circomlib.git#c372f14d324d57339c88451834bf2824e73bbdbc",
+    "snarkjs": "git+https://github.com/tornadocash/snarkjs.git#869181cfaf7526fe8972073d31655493a04326d5",
+    "websnark": "git+https://github.com/tornadocash/websnark.git#4c0af6a8b65aabea3c09f377f63c44e7a58afa6d",
+    "commander": "^4.1.1",
+    "dotenv": "^8.2.0",
+    "bn.js": "^5.2.1",
+    "crypto": "^1.0.1",
+    "fixed-merkle-tree": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "chai": "^4.3.0",
+    "mocha": "^10.0.0"
+  },
+  "keywords": [
+    "solana",
+    "privacy",
+    "zksnark",
+    "tornado",
+    "mixer"
+  ],
+  "author": "Devin AI",
+  "license": "MIT"
+}
