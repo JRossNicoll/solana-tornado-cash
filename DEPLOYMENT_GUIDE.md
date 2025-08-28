@@ -45,12 +45,12 @@ Before starting, ensure you have the following installed:
 
 ### 1.2 Clone and Setup Local Repository
 ```bash
-# Clone the repository (replace YOUR_USERNAME)
-git clone https://github.com/YOUR_USERNAME/solana-tornado-cash.git
+# Clone the repository
+git clone https://github.com/JRossNicoll/solana-tornado-cash.git
 cd solana-tornado-cash
 
-# Copy the implementation files from this session
-# (You'll need to get the files from the current implementation)
+# Checkout the implementation branch
+git checkout devin/1756418130-solana-tornado-cash
 ```
 
 ## 🔧 Step 2: Environment Setup
