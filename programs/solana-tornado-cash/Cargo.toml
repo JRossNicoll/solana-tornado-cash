@@ -17,9 +17,4 @@ default = []
 
 [dependencies]
 anchor-lang = "0.32.1"
-anchor-spl = "0.32.1"
-spl-token = "4.0.0"
 bytemuck = "1.4.0"
-
-[patch.crates-io]
-solana-instruction = { version = "2.3.0" }
