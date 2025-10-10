@@ -12,7 +12,6 @@ export function Statistics({ denomination }: StatisticsProps) {
     anonymitySet: 0,
     latestDeposits: [] as { amount: number; timestamp: number }[]
   });
-  const [isLoadingReal, setIsLoadingReal] = useState(false);
   const [usingMockData, setUsingMockData] = useState(true);
 
   useEffect(() => {
@@ -29,7 +28,6 @@ export function Statistics({ denomination }: StatisticsProps) {
         ]
       };
 
-      setIsLoadingReal(true);
       try {
         const { connection, tornadoStatePDA } = getAnchorProgram(
           { publicKey: null, signTransaction: null, signAllTransactions: null },
@@ -49,8 +47,6 @@ export function Statistics({ denomination }: StatisticsProps) {
         console.error('Failed to fetch real stats, using mock data:', error);
         setUsingMockData(true);
         setStats(mockStats);
-      } finally {
-        setIsLoadingReal(false);
       }
     };
 
