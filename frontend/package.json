@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@coral-xyz/anchor": "^0.32.1",
+    "@coral-xyz/anchor": "^0.31.0",
     "@ethersproject/keccak256": "^5.7.0",
     "@hookform/resolvers": "^5.2.1",
     "buffer": "^6.0.3",
