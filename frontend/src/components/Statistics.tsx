@@ -24,7 +24,8 @@ export function Statistics({ denomination }: StatisticsProps) {
           { amount: denomination, timestamp: Date.now() - 300000 },
           { amount: denomination, timestamp: Date.now() - 480000 },
           { amount: denomination, timestamp: Date.now() - 720000 },
-          { amount: denomination, timestamp: Date.now() - 900000 }
+          { amount: denomination, timestamp: Date.now() - 900000 },
+          { amount: denomination, timestamp: Date.now() - 1080000 }
         ]
       };
 
@@ -66,7 +67,12 @@ export function Statistics({ denomination }: StatisticsProps) {
     <div className="space-y-4">
       <Card className="bg-[#1a1f26] border-2 border-[#94f9ba]/20 tornado-glow">
         <CardHeader>
-          <CardTitle className="text-[#94f9ba] text-2xl font-bold tracking-wide">Statistics</CardTitle>
+          <div className="flex items-center justify-between mb-2">
+            <CardTitle className="text-[#94f9ba] text-2xl font-bold tracking-wide">Statistics</CardTitle>
+            <span className="px-3 py-1 bg-[#94f9ba] text-[#0a0e11] text-sm font-bold rounded">
+              {denomination} SOL
+            </span>
+          </div>
           <CardDescription className="text-[#94f9ba]/60">
             Pool information for {denomination} SOL
             {usingMockData && <span className="text-yellow-400 text-xs ml-2">(Demo data)</span>}
@@ -84,14 +90,14 @@ export function Statistics({ denomination }: StatisticsProps) {
           </div>
 
           <div className="mt-4">
-            <h4 className="text-[#94f9ba]/80 text-sm mb-2">Latest Deposits</h4>
-            <div className="space-y-2">
+            <h4 className="text-[#94f9ba]/80 text-sm mb-2">Latest deposits</h4>
+            <div className="grid grid-cols-2 gap-2">
               {stats.latestDeposits.map((deposit, idx) => (
                 <div 
                   key={idx}
                   className="flex justify-between items-center text-sm p-2 bg-[#0a0e11] rounded"
                 >
-                  <span className="text-[#94f9ba]/60">{deposit.amount} SOL</span>
+                  <span className="text-[#94f9ba]/60">#{41653 - idx}</span>
                   <span className="text-[#94f9ba]/40 text-xs">{formatTime(deposit.timestamp)}</span>
                 </div>
               ))}

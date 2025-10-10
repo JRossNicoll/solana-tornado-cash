@@ -52,3 +52,28 @@
 .tornado-gradient {
   background: linear-gradient(135deg, rgba(148, 249, 186, 0.1) 0%, rgba(92, 246, 164, 0.1) 100%);
 }
+
+/* Slider customization */
+[role="slider"] {
+  background: #94f9ba !important;
+  border: 2px solid #5cf6a4 !important;
+  box-shadow: 0 0 10px rgba(148, 249, 186, 0.5);
+  width: 18px !important;
+  height: 18px !important;
+}
+
+[data-orientation="horizontal"] {
+  background: rgba(148, 249, 186, 0.2) !important;
+  height: 4px !important;
+}
+
+[data-orientation="horizontal"] > span:first-child {
+  background: #94f9ba !important;
+}
+
+/* Active tab filled green styling */
+[data-state="active"] {
+  background: #94f9ba !important;
+  color: #0a0e11 !important;
+  font-weight: 600;
+}

@@ -2,15 +2,8 @@ import { useMemo, useState } from 'react';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { UnsafeBurnerWalletAdapter } from '@solana/wallet-adapter-wallets';
-import {
-  WalletModalProvider,
-  WalletDisconnectButton,
-  WalletMultiButton
-} from '@solana/wallet-adapter-react-ui';
+import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Shield, ArrowDownCircle, ArrowUpCircle, ExternalLink } from 'lucide-react';
 import TornadoMixer from './components/TornadoMixer';
 import { Statistics } from './components/Statistics';
 import '@solana/wallet-adapter-react-ui/styles.css';
@@ -32,37 +25,42 @@ function App() {
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
           <div className="min-h-screen bg-[#0a0e11]">
-            <div className="container mx-auto px-4 py-8">
-              <header className="text-center mb-16">
-                <div className="flex items-center justify-center mb-6">
-                  <div className="mr-4">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 2L3 7L12 12L21 7L12 2Z" fill="#94f9ba" opacity="0.8"/>
-                      <path d="M3 7V17L12 22L21 17V7" stroke="#94f9ba" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M12 12V22" stroke="#94f9ba" strokeWidth="2" strokeLinecap="round"/>
-                      <path d="M7.5 9.5L12 12L16.5 9.5" stroke="#5cf6a4" strokeWidth="1.5" strokeLinecap="round"/>
-                    </svg>
+            {/* Top Navigation Bar */}
+            <nav className="border-b border-[#94f9ba]/10 bg-[#0a0e11]">
+              <div className="container mx-auto px-4 py-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-8">
+                    <div className="flex items-center space-x-2">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L3 7L12 12L21 7L12 2Z" fill="#94f9ba" opacity="0.8"/>
+                        <path d="M3 7V17L12 22L21 17V7" stroke="#94f9ba" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M12 12V22" stroke="#94f9ba" strokeWidth="2" strokeLinecap="round"/>
+                      </svg>
+                      <span className="text-[#94f9ba] text-xl font-bold">tornado</span>
+                    </div>
+                    <div className="flex items-center space-x-6 text-sm">
+                      <a href="#" className="text-[#94f9ba]/60 hover:text-[#94f9ba] transition-colors">Voting*</a>
+                      <a href="#" className="text-[#94f9ba]/60 hover:text-[#94f9ba] transition-colors">Compliance</a>
+                      <a href="#" className="text-[#94f9ba]/60 hover:text-[#94f9ba] transition-colors">Docs</a>
+                    </div>
                   </div>
-                  <h1 className="text-6xl font-bold text-[#94f9ba] tracking-wide">tornado <span className="text-[#5cf6a4]">CASH</span></h1>
+                  <div className="flex items-center space-x-4">
+                    <button className="px-3 py-1 bg-[#1a1f26] border border-[#94f9ba]/20 text-[#94f9ba] rounded text-sm">
+                      Solana
+                    </button>
+                    <button className="p-2 bg-[#1a1f26] border border-[#94f9ba]/20 text-[#94f9ba] rounded">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6m-6-7h6m6 0h-6"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-                <p className="text-2xl text-[#94f9ba]/70 mb-8 font-light tracking-wide">
-                  Privacy solution for Solana - Non-custodial private transactions
-                </p>
-                <div className="flex justify-center space-x-4">
-                  <WalletMultiButton className="!bg-transparent !border-2 !border-[#94f9ba] !text-[#94f9ba] hover:!bg-[#94f9ba]/10 tornado-button-glow" />
-                  <WalletDisconnectButton className="!bg-transparent !border-2 !border-[#94f9ba]/60 !text-[#94f9ba]/80 hover:!bg-[#94f9ba]/10 hover:!border-[#94f9ba]" />
-                </div>
-              </header>
+              </div>
+            </nav>
 
-              <div className="max-w-7xl mx-auto">
-                <Alert className="mb-10 border-yellow-500 bg-yellow-500/10 py-4">
-                  <Shield className="h-5 w-5" />
-                  <AlertDescription className="text-yellow-200 text-base">
-                    This is a demonstration implementation. Use only on devnet with test funds.
-                  </AlertDescription>
-                </Alert>
-
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            <div className="container mx-auto px-4 py-8 max-w-6xl">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                   <div className="lg:col-span-2">
                     <TornadoMixer onDenominationChange={setSelectedDenomination} />
                   </div>
@@ -71,76 +69,29 @@ function App() {
                   </div>
                 </div>
 
-                <div className="mt-16 grid md:grid-cols-2 gap-8">
-                  <Card className="bg-[#1a1f26] border-2 border-[#94f9ba]/20 tornado-glow">
-                    <CardHeader>
-                      <CardTitle className="text-[#94f9ba] text-xl flex items-center">
-                        <Shield className="h-5 w-5 mr-2 text-[#5cf6a4]" />
-                        How It Works
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-[#94f9ba]/80 space-y-3">
-                      <div className="flex items-start space-x-3">
-                        <ArrowDownCircle className="h-5 w-5 text-[#5cf6a4] mt-0.5" />
-                        <div>
-                          <p className="font-semibold text-[#94f9ba]">1. Deposit</p>
-                          <p className="text-sm">Send SOL with a secret commitment to the mixer</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <Shield className="h-5 w-5 text-[#5cf6a4] mt-0.5" />
-                        <div>
-                          <p className="font-semibold text-[#94f9ba]">2. Mix</p>
-                          <p className="text-sm">Your deposit joins others in a privacy pool</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-3">
-                        <ArrowUpCircle className="h-5 w-5 text-[#5cf6a4] mt-0.5" />
-                        <div>
-                          <p className="font-semibold text-[#94f9ba]">3. Withdraw</p>
-                          <p className="text-sm">Use your secret to withdraw to any address</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="bg-[#1a1f26] border-2 border-[#94f9ba]/20 tornado-glow">
-                    <CardHeader>
-                      <CardTitle className="text-[#94f9ba] text-xl">Privacy Features</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-[#94f9ba]/80 space-y-3">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-[#5cf6a4] rounded-full"></div>
-                        <span>zkSNARK proof verification</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-[#5cf6a4] rounded-full"></div>
-                        <span>Merkle tree commitment scheme</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-[#5cf6a4] rounded-full"></div>
-                        <span>Relayer support for anonymity</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-[#5cf6a4] rounded-full"></div>
-                        <span>Non-custodial design</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <footer className="mt-12 text-center text-[#94f9ba]/60">
-                  <p>Built with ❤️ for Solana privacy</p>
-                  <div className="flex justify-center space-x-4 mt-2">
-                    <a href="https://github.com/tornadocash" className="flex items-center hover:text-[#5cf6a4]">
-                      <ExternalLink className="h-4 w-4 mr-1" />
-                      Original TornadoCash
-                    </a>
+                <footer className="mt-16 border-t border-[#94f9ba]/10 pt-8">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center space-x-4 text-[#94f9ba]/60">
+                      <span>Donations address: <span className="text-[#5cf6a4] font-mono">0x84ef...0390</span></span>
+                      <span className="text-[#94f9ba]/40">|</span>
+                      <span>Tornado Cash version: <span className="text-[#5cf6a4]">5bc4b44</span></span>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <a href="https://github.com/tornadocash" className="text-[#94f9ba]/60 hover:text-[#5cf6a4] transition-colors">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                      </a>
+                      <a href="https://twitter.com/tornadocash" className="text-[#94f9ba]/60 hover:text-[#5cf6a4] transition-colors">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                        </svg>
+                      </a>
+                    </div>
                   </div>
                 </footer>
               </div>
             </div>
-          </div>
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
