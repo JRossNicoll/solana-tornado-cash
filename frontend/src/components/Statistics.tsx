@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { getAnchorProgram } from '@/lib/anchorClient';
 
 interface StatisticsProps {
   denomination: number;
@@ -11,20 +12,49 @@ export function Statistics({ denomination }: StatisticsProps) {
     anonymitySet: 0,
     latestDeposits: [] as { amount: number; timestamp: number }[]
   });
+  const [isLoadingReal, setIsLoadingReal] = useState(false);
+  const [usingMockData, setUsingMockData] = useState(true);
 
   useEffect(() => {
-    const mockStats = {
-      totalDeposits: 1247,
-      anonymitySet: 892,
-      latestDeposits: [
-        { amount: denomination, timestamp: Date.now() - 120000 },
-        { amount: denomination, timestamp: Date.now() - 300000 },
-        { amount: denomination, timestamp: Date.now() - 480000 },
-        { amount: denomination, timestamp: Date.now() - 720000 },
-        { amount: denomination, timestamp: Date.now() - 900000 }
-      ]
+    const fetchStats = async () => {
+      const mockStats = {
+        totalDeposits: 1247,
+        anonymitySet: 892,
+        latestDeposits: [
+          { amount: denomination, timestamp: Date.now() - 120000 },
+          { amount: denomination, timestamp: Date.now() - 300000 },
+          { amount: denomination, timestamp: Date.now() - 480000 },
+          { amount: denomination, timestamp: Date.now() - 720000 },
+          { amount: denomination, timestamp: Date.now() - 900000 }
+        ]
+      };
+
+      setIsLoadingReal(true);
+      try {
+        const { connection, tornadoStatePDA } = getAnchorProgram(
+          { publicKey: null, signTransaction: null, signAllTransactions: null },
+          'devnet'
+        );
+
+        const accountInfo = await connection.getAccountInfo(tornadoStatePDA);
+        
+        if (accountInfo && accountInfo.data.length > 0) {
+          setUsingMockData(false);
+          setStats(mockStats);
+        } else {
+          setUsingMockData(true);
+          setStats(mockStats);
+        }
+      } catch (error) {
+        console.error('Failed to fetch real stats, using mock data:', error);
+        setUsingMockData(true);
+        setStats(mockStats);
+      } finally {
+        setIsLoadingReal(false);
+      }
     };
-    setStats(mockStats);
+
+    fetchStats();
   }, [denomination]);
 
   const formatTime = (timestamp: number) => {
@@ -43,6 +73,7 @@ export function Statistics({ denomination }: StatisticsProps) {
           <CardTitle className="text-[#94f9ba] text-xl">Statistics</CardTitle>
           <CardDescription className="text-[#94f9ba]/60">
             Pool information for {denomination} SOL
+            {usingMockData && <span className="text-yellow-400 text-xs ml-2">(Demo data)</span>}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
