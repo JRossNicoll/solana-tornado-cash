@@ -1,24 +1,21 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  min-height: 100vh;
+  background: #0a0e11;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
+.tornado-logo {
+  height: 4em;
+  padding: 0.5em;
   will-change: filter;
   transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: brightness(1.2) drop-shadow(0 0 1em rgba(148, 249, 186, 0.3));
 }
 
-@keyframes logo-spin {
+.tornado-logo:hover {
+  filter: brightness(1.4) drop-shadow(0 0 1.5em rgba(148, 249, 186, 0.5));
+}
+
+@keyframes tornado-spin {
   from {
     transform: rotate(0deg);
   }
@@ -27,16 +24,16 @@
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.tornado-glow {
+  box-shadow: 0 0 20px rgba(148, 249, 186, 0.2);
+  border: 1px solid rgba(148, 249, 186, 0.3);
 }
 
 .card {
-  padding: 2em;
+  background: #1a1f26;
+  border: 1px solid rgba(148, 249, 186, 0.2);
 }
 
-.read-the-docs {
-  color: #888;
+.tornado-gradient {
+  background: linear-gradient(135deg, rgba(148, 249, 186, 0.1) 0%, rgba(92, 246, 164, 0.1) 100%);
 }

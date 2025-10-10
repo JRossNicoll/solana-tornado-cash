@@ -10,9 +10,13 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowDownCircle, ArrowUpCircle, Copy, Loader2, CheckCircle } from 'lucide-react';
 
-const DENOMINATION_OPTIONS = [0.1, 1, 10, 100]; // SOL amounts
+const DENOMINATION_OPTIONS = [0.1, 1, 10, 100];
 
-export default function TornadoMixer() {
+interface TornadoMixerProps {
+  onDenominationChange?: (amount: number) => void;
+}
+
+export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps) {
   const { publicKey } = useWallet();
   
   const [depositAmount, setDepositAmount] = useState(0.1);
@@ -94,22 +98,29 @@ export default function TornadoMixer() {
     setStatus('Note copied to clipboard!');
   };
 
+  const handleDenominationChange = (amount: number) => {
+    setDepositAmount(amount);
+    if (onDenominationChange) {
+      onDenominationChange(amount);
+    }
+  };
+
   return (
-    <Card className="bg-gray-800/50 border-gray-700">
+    <Card className="bg-[#1a1f26] border border-[#94f9ba]/20">
       <CardHeader>
-        <CardTitle className="text-white">Privacy Mixer</CardTitle>
-        <CardDescription className="text-gray-400">
+        <CardTitle className="text-[#94f9ba] text-2xl">Privacy Mixer</CardTitle>
+        <CardDescription className="text-[#94f9ba]/60">
           Deposit and withdraw SOL privately using zkSNARK proofs
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="deposit" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-gray-700">
-            <TabsTrigger value="deposit" className="data-[state=active]:bg-purple-600">
+          <TabsList className="grid w-full grid-cols-2 bg-[#0a0e11]">
+            <TabsTrigger value="deposit" className="data-[state=active]:bg-[#94f9ba] data-[state=active]:text-[#0a0e11] text-[#94f9ba]/60">
               <ArrowDownCircle className="h-4 w-4 mr-2" />
               Deposit
             </TabsTrigger>
-            <TabsTrigger value="withdraw" className="data-[state=active]:bg-purple-600">
+            <TabsTrigger value="withdraw" className="data-[state=active]:bg-[#94f9ba] data-[state=active]:text-[#0a0e11] text-[#94f9ba]/60">
               <ArrowUpCircle className="h-4 w-4 mr-2" />
               Withdraw
             </TabsTrigger>
@@ -118,7 +129,7 @@ export default function TornadoMixer() {
           <TabsContent value="deposit" className="space-y-6">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="amount" className="text-white">Deposit Amount (SOL)</Label>
+                <Label htmlFor="amount" className="text-[#94f9ba]">Deposit Amount (SOL)</Label>
                 <div className="grid grid-cols-4 gap-2 mt-2">
                   {DENOMINATION_OPTIONS.map((amount) => (
                     <Button
@@ -126,10 +137,10 @@ export default function TornadoMixer() {
                       variant={depositAmount === amount ? "default" : "outline"}
                       className={`${
                         depositAmount === amount 
-                          ? "bg-purple-600 hover:bg-purple-700" 
-                          : "border-gray-600 text-gray-300 hover:bg-gray-700"
+                          ? "bg-[#94f9ba] text-[#0a0e11] hover:bg-[#5cf6a4]" 
+                          : "border-[#94f9ba]/40 text-[#94f9ba] hover:bg-[#94f9ba]/10"
                       }`}
-                      onClick={() => setDepositAmount(amount)}
+                      onClick={() => handleDenominationChange(amount)}
                     >
                       {amount} SOL
                     </Button>
@@ -140,7 +151,7 @@ export default function TornadoMixer() {
               <Button 
                 onClick={handleDeposit} 
                 disabled={depositLoading || !publicKey}
-                className="w-full bg-green-600 hover:bg-green-700"
+                className="w-full bg-[#5cf6a4] text-[#0a0e11] hover:bg-[#94f9ba] disabled:opacity-50"
               >
                 {depositLoading ? (
                   <>
@@ -157,15 +168,15 @@ export default function TornadoMixer() {
 
               {note && (
                 <div className="space-y-2">
-                  <Label className="text-white">Your Note (Save this securely!)</Label>
+                  <Label className="text-[#94f9ba]">Your Note (Save this securely!)</Label>
                   <div className="flex space-x-2">
                     <Textarea
                       value={note}
                       readOnly
-                      className="bg-gray-700 border-gray-600 text-white font-mono text-sm"
+                      className="bg-[#0a0e11] border-[#94f9ba]/20 text-[#94f9ba] font-mono text-sm"
                       rows={3}
                     />
-                    <Button onClick={copyNote} variant="outline" className="border-gray-600">
+                    <Button onClick={copyNote} variant="outline" className="border-[#94f9ba]/40 text-[#94f9ba] hover:bg-[#94f9ba]/10">
                       <Copy className="h-4 w-4" />
                     </Button>
                   </div>
@@ -182,48 +193,48 @@ export default function TornadoMixer() {
           <TabsContent value="withdraw" className="space-y-6">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="withdrawNote" className="text-white">Your Note</Label>
+                <Label htmlFor="withdrawNote" className="text-[#94f9ba]">Your Note</Label>
                 <Textarea
                   id="withdrawNote"
                   value={withdrawNote}
                   onChange={(e) => setWithdrawNote(e.target.value)}
                   placeholder="tornado-sol-0.1-devnet-..."
-                  className="bg-gray-700 border-gray-600 text-white font-mono"
+                  className="bg-[#0a0e11] border-[#94f9ba]/20 text-[#94f9ba] placeholder:text-[#94f9ba]/40 font-mono"
                   rows={3}
                 />
               </div>
 
               <div>
-                <Label htmlFor="recipient" className="text-white">Recipient Address</Label>
+                <Label htmlFor="recipient" className="text-[#94f9ba]">Recipient Address</Label>
                 <Input
                   id="recipient"
                   value={recipientAddress}
                   onChange={(e) => setRecipientAddress(e.target.value)}
                   placeholder="Enter Solana address..."
-                  className="bg-gray-700 border-gray-600 text-white"
+                  className="bg-[#0a0e11] border-[#94f9ba]/20 text-[#94f9ba] placeholder:text-[#94f9ba]/40"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="relayer" className="text-white">Relayer (Optional)</Label>
+                  <Label htmlFor="relayer" className="text-[#94f9ba]">Relayer (Optional)</Label>
                   <Input
                     id="relayer"
                     value={relayerAddress}
                     onChange={(e) => setRelayerAddress(e.target.value)}
                     placeholder="Relayer address..."
-                    className="bg-gray-700 border-gray-600 text-white"
+                    className="bg-[#0a0e11] border-[#94f9ba]/20 text-[#94f9ba] placeholder:text-[#94f9ba]/40"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="fee" className="text-white">Fee (SOL)</Label>
+                  <Label htmlFor="fee" className="text-[#94f9ba]">Fee (SOL)</Label>
                   <Input
                     id="fee"
                     type="number"
                     step="0.001"
                     value={fee}
                     onChange={(e) => setFee(parseFloat(e.target.value) || 0)}
-                    className="bg-gray-700 border-gray-600 text-white"
+                    className="bg-[#0a0e11] border-[#94f9ba]/20 text-[#94f9ba]"
                   />
                 </div>
               </div>
@@ -231,12 +242,12 @@ export default function TornadoMixer() {
               <Button 
                 onClick={handleWithdraw} 
                 disabled={withdrawLoading || !publicKey}
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-[#5cf6a4] text-[#0a0e11] hover:bg-[#94f9ba] disabled:opacity-50"
               >
                 {withdrawLoading ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Generating Proof & Withdrawing...
+                    Generating Proof and Withdrawing...
                   </>
                 ) : (
                   <>
@@ -250,9 +261,9 @@ export default function TornadoMixer() {
         </Tabs>
 
         {status && (
-          <Alert className="mt-6 border-blue-500 bg-blue-500/10">
+          <Alert className="mt-6 border-[#5cf6a4] bg-[#5cf6a4]/10">
             <CheckCircle className="h-4 w-4" />
-            <AlertDescription className="text-blue-200">
+            <AlertDescription className="text-[#94f9ba]">
               {status}
             </AlertDescription>
           </Alert>

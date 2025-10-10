@@ -1,4 +1,4 @@
-include "../node_modules/circomlib/circuits/mimc.circom";
+include "../node_modules/circomlib/circuits/mimcsponge.circom";
 
 template MerkleTreeChecker(levels) {
     signal input leaf;
@@ -15,7 +15,7 @@ template MerkleTreeChecker(levels) {
     for (var i = 0; i < levels; i++) {
         pathIndices[i] * (1 - pathIndices[i]) === 0;
 
-        hashers[i] = MiMCSponge(2, 220, 1);
+        hashers[i] = MiMCSponge(2, 1);
         mux[i] = MultiMux1(2);
 
         mux[i].c[0][0] <== levelHashes[i];
