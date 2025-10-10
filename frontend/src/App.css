@@ -29,6 +29,21 @@
   border: 1px solid rgba(148, 249, 186, 0.3);
 }
 
+.tornado-glow-strong {
+  box-shadow: 0 0 30px rgba(148, 249, 186, 0.4), 0 0 60px rgba(148, 249, 186, 0.2);
+  border: 1px solid rgba(148, 249, 186, 0.5);
+}
+
+.tornado-button-glow {
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(148, 249, 186, 0.3);
+}
+
+.tornado-button-glow:hover {
+  box-shadow: 0 0 25px rgba(148, 249, 186, 0.5), 0 0 50px rgba(148, 249, 186, 0.3);
+  border-color: rgba(148, 249, 186, 0.8);
+}
+
 .card {
   background: #1a1f26;
   border: 1px solid rgba(148, 249, 186, 0.2);

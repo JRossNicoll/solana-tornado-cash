@@ -64,9 +64,9 @@ export function Statistics({ denomination }: StatisticsProps) {
 
   return (
     <div className="space-y-4">
-      <Card className="bg-[#1a1f26] border border-[#94f9ba]/20">
+      <Card className="bg-[#1a1f26] border-2 border-[#94f9ba]/20 tornado-glow">
         <CardHeader>
-          <CardTitle className="text-[#94f9ba] text-xl">Statistics</CardTitle>
+          <CardTitle className="text-[#94f9ba] text-2xl font-bold tracking-wide">Statistics</CardTitle>
           <CardDescription className="text-[#94f9ba]/60">
             Pool information for {denomination} SOL
             {usingMockData && <span className="text-yellow-400 text-xs ml-2">(Demo data)</span>}

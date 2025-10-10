@@ -201,10 +201,10 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
   };
 
   return (
-    <Card className="bg-[#1a1f26] border border-[#94f9ba]/20">
-      <CardHeader>
-        <CardTitle className="text-[#94f9ba] text-2xl">Privacy Mixer</CardTitle>
-        <CardDescription className="text-[#94f9ba]/60">
+    <Card className="bg-[#1a1f26] border-2 border-[#94f9ba]/20 tornado-glow">
+      <CardHeader className="pb-4">
+        <CardTitle className="text-[#94f9ba] text-3xl font-bold tracking-wide">Privacy Mixer</CardTitle>
+        <CardDescription className="text-[#94f9ba]/70 text-base mt-2">
           Deposit and withdraw SOL privately using zkSNARK proofs
         </CardDescription>
       </CardHeader>
@@ -217,12 +217,12 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
           </AlertDescription>
         </Alert>
         <Tabs defaultValue="deposit" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-[#0a0e11]">
-            <TabsTrigger value="deposit" className="data-[state=active]:bg-[#94f9ba] data-[state=active]:text-[#0a0e11] text-[#94f9ba]/60">
+          <TabsList className="grid w-full grid-cols-2 bg-[#0a0e11] p-1 border border-[#94f9ba]/20">
+            <TabsTrigger value="deposit" className="data-[state=active]:bg-transparent data-[state=active]:border-2 data-[state=active]:border-[#94f9ba] data-[state=active]:text-[#94f9ba] data-[state=active]:tornado-button-glow text-[#94f9ba]/50 transition-all">
               <ArrowDownCircle className="h-4 w-4 mr-2" />
               Deposit
             </TabsTrigger>
-            <TabsTrigger value="withdraw" className="data-[state=active]:bg-[#94f9ba] data-[state=active]:text-[#0a0e11] text-[#94f9ba]/60">
+            <TabsTrigger value="withdraw" className="data-[state=active]:bg-transparent data-[state=active]:border-2 data-[state=active]:border-[#94f9ba] data-[state=active]:text-[#94f9ba] data-[state=active]:tornado-button-glow text-[#94f9ba]/50 transition-all">
               <ArrowUpCircle className="h-4 w-4 mr-2" />
               Withdraw
             </TabsTrigger>
@@ -236,12 +236,12 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
                   {DENOMINATION_OPTIONS.map((amount) => (
                     <Button
                       key={amount}
-                      variant={depositAmount === amount ? "default" : "outline"}
+                      variant="outline"
                       className={`${
                         depositAmount === amount 
-                          ? "bg-[#94f9ba] text-[#0a0e11] hover:bg-[#5cf6a4]" 
-                          : "border-[#94f9ba]/40 text-[#94f9ba] hover:bg-[#94f9ba]/10"
-                      }`}
+                          ? "border-2 border-[#94f9ba] text-[#94f9ba] bg-[#94f9ba]/10 tornado-button-glow shadow-lg shadow-[#94f9ba]/20" 
+                          : "border-2 border-[#94f9ba]/30 text-[#94f9ba]/70 hover:border-[#94f9ba] hover:bg-[#94f9ba]/5"
+                      } transition-all`}
                       onClick={() => handleDenominationChange(amount)}
                     >
                       {amount} SOL
@@ -253,16 +253,16 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
               <Button 
                 onClick={handleDeposit} 
                 disabled={depositLoading || !publicKey}
-                className="w-full bg-[#5cf6a4] text-[#0a0e11] hover:bg-[#94f9ba] disabled:opacity-50"
+                className="w-full border-2 border-[#5cf6a4] bg-transparent text-[#5cf6a4] hover:bg-[#5cf6a4]/10 disabled:opacity-50 tornado-button-glow text-lg py-6"
               >
                 {depositLoading ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                     Processing Deposit...
                   </>
                 ) : (
                   <>
-                    <ArrowDownCircle className="h-4 w-4 mr-2" />
+                    <ArrowDownCircle className="h-5 w-5 mr-2" />
                     Deposit {depositAmount} SOL
                   </>
                 )}
@@ -344,16 +344,16 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
               <Button 
                 onClick={handleWithdraw} 
                 disabled={withdrawLoading || !publicKey}
-                className="w-full bg-[#5cf6a4] text-[#0a0e11] hover:bg-[#94f9ba] disabled:opacity-50"
+                className="w-full border-2 border-[#5cf6a4] bg-transparent text-[#5cf6a4] hover:bg-[#5cf6a4]/10 disabled:opacity-50 tornado-button-glow text-lg py-6"
               >
                 {withdrawLoading ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
                     Generating Proof and Withdrawing...
                   </>
                 ) : (
                   <>
-                    <ArrowUpCircle className="h-4 w-4 mr-2" />
+                    <ArrowUpCircle className="h-5 w-5 mr-2" />
                     Withdraw
                   </>
                 )}

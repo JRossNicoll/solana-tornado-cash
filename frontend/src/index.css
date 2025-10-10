@@ -24,6 +24,8 @@
   
   body {
     @apply bg-[#0a0e11] text-[#94f9ba];
+    font-family: 'Space Mono', monospace;
+    font-weight: 400;
   }
 }
 
