@@ -217,7 +217,7 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
             Do not use with real funds. See <a href="https://github.com/JRossNicoll/solana-tornado-cash/blob/main/SECURITY.md" className="underline" target="_blank" rel="noopener noreferrer">SECURITY.md</a> for details.
           </AlertDescription>
         </Alert>
-        <Tabs defaultValue="deposit" className="w-full">
+        <Tabs defaultValue="deposit" className="w-full max-w-[440px]">
           <TabsList className="tabs-list grid w-full grid-cols-2 bg-transparent p-0 border-0">
             <TabsTrigger value="deposit" className="tabs-trigger">
               <ArrowDownCircle className="h-4 w-4 mr-2" />
@@ -243,7 +243,7 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
                   }))}
                   activeIndex={DENOMINATION_OPTIONS.indexOf(depositAmount)}
                   onStepClick={(index) => handleDenominationChange(DENOMINATION_OPTIONS[index])}
-                  className="mb-6"
+                  className="mb-5"
                 />
               </div>
 
