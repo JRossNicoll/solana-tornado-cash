@@ -1,7 +1,7 @@
 import * as anchor from '@coral-xyz/anchor';
 import { Connection, PublicKey } from '@solana/web3.js';
 
-export const PROGRAM_ID = new PublicKey('11111111111111111111111111111112');
+export const PROGRAM_ID = new PublicKey('2MWC2S6c94YGKQ2yicmXweZBd93VbTaDkUcfA16R3hSK');
 
 export const TORNADO_STATE_SEED = 'tornado-state';
 
