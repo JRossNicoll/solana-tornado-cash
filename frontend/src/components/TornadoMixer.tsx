@@ -20,7 +20,7 @@ interface TornadoMixerProps {
 }
 
 export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps) {
-  const { publicKey } = useWallet();
+  const { publicKey, signTransaction, signAllTransactions } = useWallet();
   
   const [depositAmount, setDepositAmount] = useState(0.1);
   const [depositLoading, setDepositLoading] = useState(false);
@@ -55,7 +55,7 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
       setStatus('Sending deposit transaction to blockchain...');
       
       const { connection, tornadoStatePDA } = getAnchorProgram(
-        { publicKey, signTransaction: (window as any).solana?.signTransaction, signAllTransactions: (window as any).solana?.signAllTransactions },
+        { publicKey, signTransaction, signAllTransactions },
         'devnet'
       );
       
@@ -71,7 +71,10 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
       tx.recentBlockhash = blockhash;
       tx.feePayer = publicKey;
       
-      const signed = await (window as any).solana.signTransaction(tx);
+      if (!signTransaction) {
+        throw new Error('Wallet does not support transaction signing');
+      }
+      const signed = await signTransaction(tx);
       const signature = await connection.sendRawTransaction(signed.serialize());
       
       setStatus('Confirming transaction...');
@@ -118,7 +121,7 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       const { connection, tornadoStatePDA } = getAnchorProgram(
-        { publicKey, signTransaction: (window as any).solana?.signTransaction, signAllTransactions: (window as any).solana?.signAllTransactions },
+        { publicKey, signTransaction, signAllTransactions },
         'devnet'
       );
       
@@ -138,7 +141,10 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
       tx.recentBlockhash = blockhash;
       tx.feePayer = publicKey;
       
-      const signed = await (window as any).solana.signTransaction(tx);
+      if (!signTransaction) {
+        throw new Error('Wallet does not support transaction signing');
+      }
+      const signed = await signTransaction(tx);
       const signature = await connection.sendRawTransaction(signed.serialize());
       
       setStatus('Confirming transaction...');
