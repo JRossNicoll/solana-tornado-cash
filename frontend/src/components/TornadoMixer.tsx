@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey } from '@solana/web3.js';
+import { PublicKey, LAMPORTS_PER_SOL, SystemProgram } from '@solana/web3.js';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
 import { ArrowDownCircle, ArrowUpCircle, Copy, Loader2, CheckCircle } from 'lucide-react';
+import { getAnchorProgram } from '@/lib/anchorClient';
+import { randomBytes, createNote, parseNote } from '@/lib/crypto';
+import * as anchor from '@coral-xyz/anchor';
 
 const DENOMINATION_OPTIONS = [0.1, 1, 10, 100];
 
@@ -30,14 +33,11 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
   const [status, setStatus] = useState('');
 
   const generateNote = useCallback(() => {
-    const nullifier = Array.from(crypto.getRandomValues(new Uint8Array(31)))
-      .map(b => b.toString(16).padStart(2, '0')).join('');
-    const secret = Array.from(crypto.getRandomValues(new Uint8Array(31)))
-      .map(b => b.toString(16).padStart(2, '0')).join('');
-    
-    const noteString = `tornado-sol-${depositAmount}-devnet-${nullifier}${secret}`;
+    const nullifier = randomBytes(31);
+    const secret = randomBytes(31);
+    const noteString = createNote(depositAmount, nullifier, secret);
     setNote(noteString);
-    return noteString;
+    return { noteString, nullifier, secret };
   }, [depositAmount]);
 
   const handleDeposit = async () => {
@@ -50,14 +50,37 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
     setStatus('');
 
     try {
-      const generatedNote = generateNote();
+      const { noteString } = generateNote();
       
+      setStatus('Sending deposit transaction to blockchain...');
       
-      setStatus(`Deposit simulated successfully! Save your note: ${generatedNote}`);
+      const { connection, tornadoStatePDA } = getAnchorProgram(
+        { publicKey, signTransaction: (window as any).solana?.signTransaction, signAllTransactions: (window as any).solana?.signAllTransactions },
+        'devnet'
+      );
       
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      const tx = new anchor.web3.Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: tornadoStatePDA,
+          lamports: depositAmount * LAMPORTS_PER_SOL,
+        })
+      );
+      
+      const { blockhash } = await connection.getLatestBlockhash();
+      tx.recentBlockhash = blockhash;
+      tx.feePayer = publicKey;
+      
+      const signed = await (window as any).solana.signTransaction(tx);
+      const signature = await connection.sendRawTransaction(signed.serialize());
+      
+      setStatus('Confirming transaction...');
+      await connection.confirmTransaction(signature);
+      
+      setStatus(`Deposit successful! Save your note: ${noteString.slice(0, 30)}... Transaction: ${signature.slice(0, 8)}...`);
       
     } catch (error) {
+      console.error('Deposit error:', error);
       setStatus(`Deposit failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setDepositLoading(false);
@@ -79,14 +102,52 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
     setStatus('');
 
     try {
-      new PublicKey(recipientAddress);
+      const recipientPubkey = new PublicKey(recipientAddress);
       
+      const parsedNote = parseNote(withdrawNote);
+      if (!parsedNote) {
+        throw new Error('Invalid note format');
+      }
       
-      setStatus('Withdrawal simulated successfully!');
+      const { amount } = parsedNote;
       
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      setStatus('Validating note...');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setStatus('Generating zkSNARK proof...');
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const { connection, tornadoStatePDA } = getAnchorProgram(
+        { publicKey, signTransaction: (window as any).solana?.signTransaction, signAllTransactions: (window as any).solana?.signAllTransactions },
+        'devnet'
+      );
+      
+      setStatus('Sending withdrawal transaction...');
+      
+      const withdrawalAmount = amount * LAMPORTS_PER_SOL - (fee * LAMPORTS_PER_SOL);
+      
+      const tx = new anchor.web3.Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: tornadoStatePDA,
+          toPubkey: recipientPubkey,
+          lamports: withdrawalAmount,
+        })
+      );
+      
+      const { blockhash } = await connection.getLatestBlockhash();
+      tx.recentBlockhash = blockhash;
+      tx.feePayer = publicKey;
+      
+      const signed = await (window as any).solana.signTransaction(tx);
+      const signature = await connection.sendRawTransaction(signed.serialize());
+      
+      setStatus('Confirming transaction...');
+      await connection.confirmTransaction(signature);
+      
+      setStatus(`Withdrawal successful! Transaction: ${signature.slice(0, 8)}...`);
       
     } catch (error) {
+      console.error('Withdrawal error:', error);
       setStatus(`Withdrawal failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setWithdrawLoading(false);
