@@ -77,32 +77,32 @@ export function Statistics({ denomination }: StatisticsProps) {
               {denomination} SOL
             </span>
           </div>
-          <CardDescription className="text-[#94febf]/60">
+          <CardDescription className="text-[#eee]/60">
             Pool information for {denomination} SOL
             {usingMockData && <span className="text-yellow-400 text-xs ml-2">(Demo data)</span>}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex justify-between items-center p-3 bg-[#000403] rounded-lg">
-            <span className="text-[#94febf]/80">Total Deposits</span>
+            <span className="text-[#eee]/80">Total Deposits</span>
             <span className="text-[#94febf] font-bold">{stats.totalDeposits}</span>
           </div>
           
           <div className="flex justify-between items-center p-3 bg-[#000403] rounded-lg">
-            <span className="text-[#94febf]/80">Anonymity Set</span>
+            <span className="text-[#eee]/80">Anonymity Set</span>
             <span className="text-[#94febf] font-bold">{stats.anonymitySet}</span>
           </div>
 
           <div className="mt-4">
-            <h4 className="text-[#94febf]/80 text-sm mb-2">Latest deposits</h4>
+            <h4 className="text-[#eee]/80 text-sm mb-2">Latest deposits</h4>
             <div className="grid grid-cols-2 gap-2">
               {stats.latestDeposits.map((deposit, idx) => (
                 <div 
                   key={idx}
                   className="flex justify-between items-center text-sm p-2 bg-[#000403] rounded"
                 >
-                  <span className="text-[#94febf]/60">{idx + 1}.</span>
-                  <span className="text-[#94febf]/40 text-xs">{formatTime(deposit.timestamp)}</span>
+                  <span className="text-[#94febf]/60">#{41653 - idx}</span>
+                  <span className="text-[#eee]/40 text-xs">{formatTime(deposit.timestamp)}</span>
                 </div>
               ))}
             </div>

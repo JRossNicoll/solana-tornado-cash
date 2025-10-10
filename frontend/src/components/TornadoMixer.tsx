@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Textarea } from '@/components/ui/textarea';
-import { Slider } from '@/components/ui/slider';
+import { Steps } from '@/components/ui/steps';
 import { ArrowDownCircle, ArrowUpCircle, Copy, Loader2, CheckCircle } from 'lucide-react';
 import { getAnchorProgram } from '@/lib/anchorClient';
 import { randomBytes, createNote, parseNote } from '@/lib/crypto';
@@ -205,7 +205,7 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
     <Card className="bg-[#181818] border-2 border-[#94febf]/20 tornado-glow">
       <CardHeader className="pb-4">
         <CardTitle className="text-[#94febf] text-3xl font-bold tracking-wide">Privacy Mixer</CardTitle>
-        <CardDescription className="text-[#94febf]/70 text-base mt-2">
+        <CardDescription className="text-[#eee]/70 text-base mt-2">
           Deposit and withdraw SOL privately using zkSNARK proofs
         </CardDescription>
       </CardHeader>
@@ -218,36 +218,33 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
           </AlertDescription>
         </Alert>
         <Tabs defaultValue="deposit" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-[#000403] p-1 border border-[#94febf]/20">
-            <TabsTrigger value="deposit" className="data-[state=active]:bg-[#94febf] data-[state=active]:text-[#000403] text-[#94febf]/50 transition-all">
+          <TabsList className="tabs-list grid w-full grid-cols-2 bg-transparent p-0 border-0">
+            <TabsTrigger value="deposit" className="tabs-trigger">
               <ArrowDownCircle className="h-4 w-4 mr-2" />
               Deposit
             </TabsTrigger>
-            <TabsTrigger value="withdraw" className="data-[state=active]:bg-[#94febf] data-[state=active]:text-[#000403] text-[#94febf]/50 transition-all">
+            <TabsTrigger value="withdraw" className="tabs-trigger">
               <ArrowUpCircle className="h-4 w-4 mr-2" />
               Withdraw
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="deposit" className="space-y-6">
+          <TabsContent value="deposit" className="tabs-content space-y-6">
             <div className="space-y-4">
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <Label htmlFor="amount" className="text-[#94febf]">Amount</Label>
-                  <span className="text-[#94febf] text-sm font-mono">{depositAmount} SOL</span>
+                <div className="flex items-center justify-between mb-6">
+                  <Label htmlFor="amount" className="text-[#eee]">Amount</Label>
+                  <span className="text-[#94febf] text-sm font-mono font-bold">{depositAmount} SOL</span>
                 </div>
-                <Slider
-                  value={[DENOMINATION_OPTIONS.indexOf(depositAmount)]}
-                  onValueChange={(value) => handleDenominationChange(DENOMINATION_OPTIONS[value[0]])}
-                  max={DENOMINATION_OPTIONS.length - 1}
-                  step={1}
-                  className="my-6"
+                <Steps
+                  steps={DENOMINATION_OPTIONS.map(amount => ({
+                    label: `${amount} SOL`,
+                    value: amount
+                  }))}
+                  activeIndex={DENOMINATION_OPTIONS.indexOf(depositAmount)}
+                  onStepClick={(index) => handleDenominationChange(DENOMINATION_OPTIONS[index])}
+                  className="mb-6"
                 />
-                <div className="flex justify-between text-xs text-[#94febf]/60 -mt-2">
-                  {DENOMINATION_OPTIONS.map((amount) => (
-                    <span key={amount}>{amount} SOL</span>
-                  ))}
-                </div>
               </div>
 
               <Button 
@@ -270,15 +267,15 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
 
               {note && (
                 <div className="space-y-2">
-                  <Label className="text-[#94febf]">Your Note (Save this securely!)</Label>
+                  <Label className="text-[#eee]">Your Note (Save this securely!)</Label>
                   <div className="flex space-x-2">
                     <Textarea
                       value={note}
                       readOnly
-                      className="bg-[#000403] border-[#94febf]/20 text-[#94febf] font-mono text-sm"
+                      className="bg-[#000403] border-[#666] text-[#eee] font-mono text-sm"
                       rows={3}
                     />
-                    <Button onClick={copyNote} variant="outline" className="border-[#94febf]/40 text-[#94febf] hover:bg-[#94febf]/10">
+                    <Button onClick={copyNote} variant="outline" className="border-[#666] text-[#eee] hover:bg-[#94febf]/10">
                       <Copy className="h-4 w-4" />
                     </Button>
                   </div>
@@ -292,51 +289,51 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
             </div>
           </TabsContent>
 
-          <TabsContent value="withdraw" className="space-y-6">
+          <TabsContent value="withdraw" className="tabs-content space-y-6">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="withdrawNote" className="text-[#94febf]">Your Note</Label>
+                <Label htmlFor="withdrawNote" className="text-[#eee]">Your Note</Label>
                 <Textarea
                   id="withdrawNote"
                   value={withdrawNote}
                   onChange={(e) => setWithdrawNote(e.target.value)}
                   placeholder="tornado-sol-0.1-devnet-..."
-                  className="bg-[#000403] border-[#94febf]/20 text-[#94febf] placeholder:text-[#94febf]/40 font-mono"
+                  className="bg-[#000403] border-[#666] text-[#eee] placeholder:text-[#eee]/40 font-mono"
                   rows={3}
                 />
               </div>
 
               <div>
-                <Label htmlFor="recipient" className="text-[#94febf]">Recipient Address</Label>
+                <Label htmlFor="recipient" className="text-[#eee]">Recipient Address</Label>
                 <Input
                   id="recipient"
                   value={recipientAddress}
                   onChange={(e) => setRecipientAddress(e.target.value)}
                   placeholder="Enter Solana address..."
-                  className="bg-[#000403] border-[#94febf]/20 text-[#94febf] placeholder:text-[#94febf]/40"
+                  className="bg-[#000403] border-[#666] text-[#eee] placeholder:text-[#eee]/40"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="relayer" className="text-[#94febf]">Relayer (Optional)</Label>
+                  <Label htmlFor="relayer" className="text-[#eee]">Relayer (Optional)</Label>
                   <Input
                     id="relayer"
                     value={relayerAddress}
                     onChange={(e) => setRelayerAddress(e.target.value)}
                     placeholder="Relayer address..."
-                    className="bg-[#000403] border-[#94febf]/20 text-[#94febf] placeholder:text-[#94febf]/40"
+                    className="bg-[#000403] border-[#666] text-[#eee] placeholder:text-[#eee]/40"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="fee" className="text-[#94febf]">Fee (SOL)</Label>
+                  <Label htmlFor="fee" className="text-[#eee]">Fee (SOL)</Label>
                   <Input
                     id="fee"
                     type="number"
                     step="0.001"
                     value={fee}
                     onChange={(e) => setFee(parseFloat(e.target.value) || 0)}
-                    className="bg-[#000403] border-[#94febf]/20 text-[#94febf]"
+                    className="bg-[#000403] border-[#666] text-[#eee]"
                   />
                 </div>
               </div>
@@ -365,7 +362,7 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
         {status && (
           <Alert className="mt-6 border-[#3bf0a1] bg-[#3bf0a1]/10">
             <CheckCircle className="h-4 w-4" />
-            <AlertDescription className="text-[#94febf]">
+            <AlertDescription className="text-[#eee]">
               {status}
             </AlertDescription>
           </Alert>

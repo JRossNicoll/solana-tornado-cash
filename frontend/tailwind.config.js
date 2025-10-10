@@ -14,6 +14,12 @@ export default {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		colors: {
+  			border: '#666',
+  			input: '#393939',
+  			primary: {
+  				DEFAULT: '#94febf',
+  				foreground: '#000403',
+  			},
   			sidebar: {
   				DEFAULT: 'hsl(var(--sidebar-background))',
   				foreground: 'hsl(var(--sidebar-foreground))',
