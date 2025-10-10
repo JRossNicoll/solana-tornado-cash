@@ -84,7 +84,21 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
       
     } catch (error) {
       console.error('Deposit error:', error);
-      setStatus(`Deposit failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      let errorMessage = 'Unknown error';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('insufficient funds') || error.message.includes('Attempt to debit')) {
+          errorMessage = 'Insufficient funds in your wallet. Please ensure you have enough SOL for the deposit plus transaction fees.';
+        } else if (error.message.includes('blockhash')) {
+          errorMessage = 'Network error. Please try again.';
+        } else if (error.message.includes('Transaction simulation failed')) {
+          errorMessage = 'Transaction simulation failed. The smart contract may not be deployed yet. Please ensure the program ID is correct and deployed to devnet.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      setStatus(`Deposit failed: ${errorMessage}`);
     } finally {
       setDepositLoading(false);
     }
@@ -154,7 +168,21 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
       
     } catch (error) {
       console.error('Withdrawal error:', error);
-      setStatus(`Withdrawal failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      let errorMessage = 'Unknown error';
+      
+      if (error instanceof Error) {
+        if (error.message.includes('Invalid note format')) {
+          errorMessage = 'Invalid note format. Please check your note and try again.';
+        } else if (error.message.includes('insufficient funds')) {
+          errorMessage = 'The mixer contract has insufficient funds for this withdrawal.';
+        } else if (error.message.includes('Transaction simulation failed')) {
+          errorMessage = 'Withdrawal failed. The smart contract may not be deployed yet or the note may be invalid.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      setStatus(`Withdrawal failed: ${errorMessage}`);
     } finally {
       setWithdrawLoading(false);
     }
@@ -181,6 +209,13 @@ export default function TornadoMixer({ onDenominationChange }: TornadoMixerProps
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <Alert className="mb-4 border-yellow-500 bg-yellow-500/10">
+          <AlertDescription className="text-yellow-200">
+            ⚠️ <strong>Educational Demo:</strong> This is a demonstration implementation on Solana devnet. 
+            The zkSNARK proof verification uses a simplified approach due to Solana's compute constraints. 
+            Do not use with real funds. See <a href="https://github.com/JRossNicoll/solana-tornado-cash/blob/main/SECURITY.md" className="underline" target="_blank" rel="noopener noreferrer">SECURITY.md</a> for details.
+          </AlertDescription>
+        </Alert>
         <Tabs defaultValue="deposit" className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-[#0a0e11]">
             <TabsTrigger value="deposit" className="data-[state=active]:bg-[#94f9ba] data-[state=active]:text-[#0a0e11] text-[#94f9ba]/60">
