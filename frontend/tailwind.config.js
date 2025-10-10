@@ -5,8 +5,8 @@ export default {
   theme: {
   	extend: {
   		fontFamily: {
-  			sans: ['Space Mono', 'monospace'],
-  			mono: ['Space Mono', 'monospace'],
+  			sans: ['"PT Mono"', 'monospace'],
+  			mono: ['"PT Mono"', 'monospace'],
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

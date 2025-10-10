@@ -1,18 +1,18 @@
 #root {
   min-height: 100vh;
-  background: #0a0e11;
+  background: #000403;
 }
 
 .tornado-logo {
   height: 4em;
   padding: 0.5em;
   will-change: filter;
-  transition: filter 300ms;
-  filter: brightness(1.2) drop-shadow(0 0 1em rgba(148, 249, 186, 0.3));
+  transition: filter 150ms ease-in-out;
+  filter: brightness(1.2) drop-shadow(0 0 1em rgba(148, 254, 191, 0.3));
 }
 
 .tornado-logo:hover {
-  filter: brightness(1.4) drop-shadow(0 0 1.5em rgba(148, 249, 186, 0.5));
+  filter: brightness(1.4) drop-shadow(0 0 1.5em rgba(148, 254, 191, 0.5));
 }
 
 @keyframes tornado-spin {
@@ -25,55 +25,59 @@
 }
 
 .tornado-glow {
-  box-shadow: 0 0 20px rgba(148, 249, 186, 0.2);
-  border: 1px solid rgba(148, 249, 186, 0.3);
+  box-shadow: 0 0 20px rgba(148, 254, 191, 0.2);
+  border: 1px solid rgba(148, 254, 191, 0.3);
 }
 
 .tornado-glow-strong {
-  box-shadow: 0 0 30px rgba(148, 249, 186, 0.4), 0 0 60px rgba(148, 249, 186, 0.2);
-  border: 1px solid rgba(148, 249, 186, 0.5);
+  box-shadow: 0 0 30px rgba(148, 254, 191, 0.4), 0 0 60px rgba(148, 254, 191, 0.2);
+  border: 1px solid rgba(148, 254, 191, 0.5);
 }
 
 .tornado-button-glow {
-  transition: all 0.3s ease;
-  box-shadow: 0 0 15px rgba(148, 249, 186, 0.3);
+  transition: all 0.15s ease-in-out;
+  box-shadow: 0 0 15px rgba(148, 254, 191, 0.3);
 }
 
 .tornado-button-glow:hover {
-  box-shadow: 0 0 25px rgba(148, 249, 186, 0.5), 0 0 50px rgba(148, 249, 186, 0.3);
-  border-color: rgba(148, 249, 186, 0.8);
+  box-shadow: 0 0 25px rgba(148, 254, 191, 0.5), 0 0 50px rgba(148, 254, 191, 0.3);
+  border-color: rgba(148, 254, 191, 0.8);
 }
 
 .card {
-  background: #1a1f26;
-  border: 1px solid rgba(148, 249, 186, 0.2);
+  background: #181818;
+  border: 1px solid rgba(148, 254, 191, 0.2);
 }
 
 .tornado-gradient {
-  background: linear-gradient(135deg, rgba(148, 249, 186, 0.1) 0%, rgba(92, 246, 164, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(148, 254, 191, 0.1) 0%, rgba(59, 240, 161, 0.1) 100%);
+}
+
+button, .tabs button, input, select {
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
 /* Slider customization */
 [role="slider"] {
-  background: #94f9ba !important;
-  border: 2px solid #5cf6a4 !important;
-  box-shadow: 0 0 10px rgba(148, 249, 186, 0.5);
+  background: #94febf !important;
+  border: 2px solid #3bf0a1 !important;
+  box-shadow: 0 0 10px rgba(148, 254, 191, 0.5);
   width: 18px !important;
   height: 18px !important;
 }
 
 [data-orientation="horizontal"] {
-  background: rgba(148, 249, 186, 0.2) !important;
+  background: rgba(148, 254, 191, 0.2) !important;
   height: 4px !important;
 }
 
 [data-orientation="horizontal"] > span:first-child {
-  background: #94f9ba !important;
+  background: #94febf !important;
 }
 
 /* Active tab filled green styling */
 [data-state="active"] {
-  background: #94f9ba !important;
-  color: #0a0e11 !important;
+  background: #94febf !important;
+  color: #000403 !important;
   font-weight: 600;
 }

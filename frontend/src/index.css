@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --tornado-primary: 148, 249, 186;
-  --tornado-secondary: 92, 246, 164;
-  --tornado-dark: 10, 14, 17;
-  --tornado-card: 26, 31, 38;
+  --tornado-primary: 148, 254, 191;
+  --tornado-secondary: 59, 240, 161;
+  --tornado-dark: 0, 4, 3;
+  --tornado-card: 24, 24, 24;
 }
 
 @layer base {
@@ -23,8 +23,8 @@
   }
   
   body {
-    @apply bg-[#0a0e11] text-[#94f9ba];
-    font-family: 'Space Mono', monospace;
+    @apply bg-[#000403] text-[#94febf];
+    font-family: 'PT Mono', monospace;
     font-weight: 400;
   }
 }

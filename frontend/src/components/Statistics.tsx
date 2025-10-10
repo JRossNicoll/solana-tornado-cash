@@ -25,7 +25,11 @@ export function Statistics({ denomination }: StatisticsProps) {
           { amount: denomination, timestamp: Date.now() - 480000 },
           { amount: denomination, timestamp: Date.now() - 720000 },
           { amount: denomination, timestamp: Date.now() - 900000 },
-          { amount: denomination, timestamp: Date.now() - 1080000 }
+          { amount: denomination, timestamp: Date.now() - 1080000 },
+          { amount: denomination, timestamp: Date.now() - 1260000 },
+          { amount: denomination, timestamp: Date.now() - 1440000 },
+          { amount: denomination, timestamp: Date.now() - 1620000 },
+          { amount: denomination, timestamp: Date.now() - 1800000 }
         ]
       };
 
@@ -65,40 +69,40 @@ export function Statistics({ denomination }: StatisticsProps) {
 
   return (
     <div className="space-y-4">
-      <Card className="bg-[#1a1f26] border-2 border-[#94f9ba]/20 tornado-glow">
+      <Card className="bg-[#181818] border-2 border-[#94febf]/20 tornado-glow">
         <CardHeader>
           <div className="flex items-center justify-between mb-2">
-            <CardTitle className="text-[#94f9ba] text-2xl font-bold tracking-wide">Statistics</CardTitle>
-            <span className="px-3 py-1 bg-[#94f9ba] text-[#0a0e11] text-sm font-bold rounded">
+            <CardTitle className="text-[#94febf] text-2xl font-bold tracking-wide">Statistics</CardTitle>
+            <span className="px-3 py-1 bg-[#94febf] text-[#000403] text-sm font-bold rounded">
               {denomination} SOL
             </span>
           </div>
-          <CardDescription className="text-[#94f9ba]/60">
+          <CardDescription className="text-[#94febf]/60">
             Pool information for {denomination} SOL
             {usingMockData && <span className="text-yellow-400 text-xs ml-2">(Demo data)</span>}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex justify-between items-center p-3 bg-[#0a0e11] rounded-lg">
-            <span className="text-[#94f9ba]/80">Total Deposits</span>
-            <span className="text-[#94f9ba] font-bold">{stats.totalDeposits}</span>
+          <div className="flex justify-between items-center p-3 bg-[#000403] rounded-lg">
+            <span className="text-[#94febf]/80">Total Deposits</span>
+            <span className="text-[#94febf] font-bold">{stats.totalDeposits}</span>
           </div>
           
-          <div className="flex justify-between items-center p-3 bg-[#0a0e11] rounded-lg">
-            <span className="text-[#94f9ba]/80">Anonymity Set</span>
-            <span className="text-[#94f9ba] font-bold">{stats.anonymitySet}</span>
+          <div className="flex justify-between items-center p-3 bg-[#000403] rounded-lg">
+            <span className="text-[#94febf]/80">Anonymity Set</span>
+            <span className="text-[#94febf] font-bold">{stats.anonymitySet}</span>
           </div>
 
           <div className="mt-4">
-            <h4 className="text-[#94f9ba]/80 text-sm mb-2">Latest deposits</h4>
+            <h4 className="text-[#94febf]/80 text-sm mb-2">Latest deposits</h4>
             <div className="grid grid-cols-2 gap-2">
               {stats.latestDeposits.map((deposit, idx) => (
                 <div 
                   key={idx}
-                  className="flex justify-between items-center text-sm p-2 bg-[#0a0e11] rounded"
+                  className="flex justify-between items-center text-sm p-2 bg-[#000403] rounded"
                 >
-                  <span className="text-[#94f9ba]/60">#{41653 - idx}</span>
-                  <span className="text-[#94f9ba]/40 text-xs">{formatTime(deposit.timestamp)}</span>
+                  <span className="text-[#94febf]/60">{idx + 1}.</span>
+                  <span className="text-[#94febf]/40 text-xs">{formatTime(deposit.timestamp)}</span>
                 </div>
               ))}
             </div>
