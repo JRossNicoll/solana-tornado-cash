@@ -1,7 +1,6 @@
 use anchor_lang::prelude::*;
-use std::collections::HashMap;
 
-declare_id!("11111111111111111111111111111112");
+declare_id!("2MWC2S6c94YGKQ2yicmXweZBd93VbTaDkUcfA16R3hSK");
 
 #[program]
 pub mod solana_tornado_cash {
@@ -26,7 +25,7 @@ pub mod solana_tornado_cash {
     }
 
     pub fn deposit(ctx: Context<Deposit>, commitment: [u8; 32]) -> Result<()> {
-        require!(!ctx.accounts.tornado.commitments.contains_key(&commitment), TornadoError::CommitmentExists);
+        require!(!ctx.accounts.tornado.commitments.contains(&commitment), TornadoError::CommitmentExists);
         
         let denomination = ctx.accounts.tornado.denomination;
         
@@ -43,7 +42,7 @@ pub mod solana_tornado_cash {
 
         let tornado = &mut ctx.accounts.tornado;
         let inserted_index = insert_commitment(tornado, commitment)?;
-        tornado.commitments.insert(commitment, true);
+        tornado.commitments.push(commitment);
 
         emit!(DepositEvent {
             commitment,
@@ -67,7 +66,7 @@ pub mod solana_tornado_cash {
         let tornado = &mut ctx.accounts.tornado;
         
         require!(fee <= tornado.denomination, TornadoError::FeeExceedsValue);
-        require!(!tornado.nullifier_hashes.contains_key(&nullifier_hash), TornadoError::NoteAlreadySpent);
+        require!(!tornado.nullifier_hashes.contains(&nullifier_hash), TornadoError::NoteAlreadySpent);
         require!(is_known_root(tornado, root), TornadoError::UnknownRoot);
         
         require!(verify_proof(&proof, &[
@@ -79,7 +78,7 @@ pub mod solana_tornado_cash {
             refund,
         ]), TornadoError::InvalidProof);
 
-        tornado.nullifier_hashes.insert(nullifier_hash, true);
+        tornado.nullifier_hashes.push(nullifier_hash);
 
         let withdrawal_amount = tornado.denomination - fee;
         
@@ -103,7 +102,7 @@ pub mod solana_tornado_cash {
 
     pub fn is_spent(ctx: Context<IsSpent>, nullifier_hash: [u8; 32]) -> Result<bool> {
         let tornado = &ctx.accounts.tornado;
-        Ok(tornado.nullifier_hashes.contains_key(&nullifier_hash))
+        Ok(tornado.nullifier_hashes.contains(&nullifier_hash))
     }
 }
 
@@ -167,9 +166,9 @@ pub struct TornadoState {
     pub next_index: u32,
     pub authority: Pubkey,
     pub roots: [u8; 32 * 30], // Store last 30 roots
-    pub filled_subtrees: HashMap<u32, [u8; 32]>,
-    pub commitments: HashMap<[u8; 32], bool>,
-    pub nullifier_hashes: HashMap<[u8; 32], bool>,
+    pub filled_subtrees: Vec<([u8; 32], u32)>, // (hash, level) pairs
+    pub commitments: Vec<[u8; 32]>,
+    pub nullifier_hashes: Vec<[u8; 32]>,
 }
 
 impl TornadoState {
@@ -216,12 +215,20 @@ fn insert_commitment(tornado: &mut TornadoState, commitment: [u8; 32]) -> Result
     
     for i in 0..tornado.merkle_tree_height {
         if current_index % 2 == 0 {
-            tornado.filled_subtrees.insert(i as u32, current_level_hash);
+            if let Some(pos) = tornado.filled_subtrees.iter().position(|(_, level)| *level == i as u32) {
+                tornado.filled_subtrees[pos] = (current_level_hash, i as u32);
+            } else {
+                tornado.filled_subtrees.push((current_level_hash, i as u32));
+            }
             let zero_hash = get_zero_hash(i as usize);
             current_level_hash = hash_left_right(&current_level_hash, &zero_hash);
         } else {
             let zero_hash = get_zero_hash(i as usize);
-            let left = tornado.filled_subtrees.get(&(i as u32)).unwrap_or(&zero_hash);
+            let left = tornado.filled_subtrees
+                .iter()
+                .find(|(_, level)| *level == i as u32)
+                .map(|(hash, _)| hash)
+                .unwrap_or(&zero_hash);
             current_level_hash = hash_left_right(left, &current_level_hash);
         }
         current_index /= 2;
